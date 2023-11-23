@@ -5,7 +5,7 @@
 namespace libermanyankt_42_20.Migrations
 {
     /// <inheritdoc />
-    public partial class _1 : Migration
+    public partial class _4 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

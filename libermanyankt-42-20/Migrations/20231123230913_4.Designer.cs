@@ -11,8 +11,8 @@ using libermanyankt_42_20.Database;
 namespace libermanyankt_42_20.Migrations
 {
     [DbContext(typeof(PrepodDbContext))]
-    [Migration("20231123220220_1")]
-    partial class _1
+    [Migration("20231123230913_4")]
+    partial class _4
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

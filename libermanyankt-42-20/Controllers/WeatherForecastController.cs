@@ -1,3 +1,4 @@
+﻿using libermanyankt_42_20;
 using Microsoft.AspNetCore.Mvc;
 
 namespace libermanyankt_42_20.Controllers
@@ -18,21 +19,11 @@ namespace libermanyankt_42_20.Controllers
             _logger = logger;
         }
 
-        [HttpPost(Name = "AddNesSummary")]
-
-        public string[] AddNewSummary(string newSummary)
-        {
-            _logger.LogError("New Method was called");
-
-            var list = Summaries.ToList();
-            list.Add(newSummary);
-            return list.ToArray();
-        }
-
         [HttpGet(Name = "GetWeatherForecast")]
         public IEnumerable<WeatherForecast> Get()
         {
             _logger.LogError("Method was called");
+
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
                 Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
@@ -40,6 +31,15 @@ namespace libermanyankt_42_20.Controllers
                 Summary = Summaries[Random.Shared.Next(Summaries.Length)]
             })
             .ToArray();
+        }
+        [HttpPost(Name = "AddNewSummary")]
+        public string[] AddNewSummary(string newSummary)
+        {
+            _logger.LogError("New method was called");
+
+            var list = Summaries.ToList();
+            list.Add(newSummary);
+            return list.ToArray();
         }
     }
 }

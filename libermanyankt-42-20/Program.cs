@@ -3,6 +3,8 @@ using NLog.Web;
 using libermanyankt_42_20.Database;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
+using libermanyankt_42_20.ServiceInterfaces;
+using libermanyankt_42_20.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +24,8 @@ builder.Services.AddSwaggerGen();
     builder.Services.AddDbContext<PrepodDbContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+
+    builder.Services.AddServices();
     var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -30,6 +34,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 app.UseAuthorization();
 
