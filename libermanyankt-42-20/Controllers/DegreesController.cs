@@ -25,7 +25,8 @@ namespace libermanyankt_42_20.Controllers
             _context = context;
         }
 
-        [HttpPost(Name = "GetPrepodsByDegree")]
+        [HttpPost]
+        [Route("GetPrepodsByDegree")]
         public async Task<IActionResult> GetPrepodsByDegreeAsync(PrepodDegreeFilter filter, CancellationToken cancellationToken = default)
         {
             var degrees = await _degreesService.GetPrepodsByDegreeAsync(filter, cancellationToken);

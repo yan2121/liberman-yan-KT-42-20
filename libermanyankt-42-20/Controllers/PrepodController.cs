@@ -44,68 +44,91 @@ namespace libermanyankt_42_20.Controllers
             return Ok(prepod);
         }
 
-        [HttpPut("EditPrepod")]
-        public IActionResult UpdatePrepod(string firstname, [FromBody] Prepod updatedPrepod)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateTeacher(int id, Prepod prepod)
         {
-            var existingPrepod = _context.Prepod.FirstOrDefault(g => g.FirstName == firstname);
-
-            if (existingPrepod == null)
+            if (id != prepod.PrepodId)
             {
-                return NotFound();
+                return BadRequest();
             }
 
-            existingPrepod.FirstName = updatedPrepod.FirstName;
-            existingPrepod.LastName = updatedPrepod.LastName;
-            existingPrepod.MiddleName = updatedPrepod.MiddleName;
-            existingPrepod.KafedraId = updatedPrepod.KafedraId;
-            existingPrepod.DegreeId = updatedPrepod.DegreeId;
-            _context.SaveChanges();
-
-            return Ok();
-        }
-        //добавление для кафедры
-        [HttpPost("AddKafedra", Name = "AddKafedra")]
-        public IActionResult CreateKafedra([FromBody] libermanyankt_42_20.Models.Kafedra kafedra)
-        {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
+
+                _context.Entry(prepod).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+
+                return Ok("vse ok");
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return BadRequest();
             }
 
-            _context.Kafedra.Add(kafedra);
-            _context.SaveChanges();
-            return Ok(kafedra);
         }
 
-        [HttpPut("EditKafedra")]
-        public IActionResult UpdateKafedra(string kafedraname, [FromBody] Kafedra updatedKafedra)
+
+        /*  //добавление для кафедры
+          [HttpPost("AddKafedra", Name = "AddKafedra")]
+          public IActionResult CreateKafedra([FromBody] OskinAndreiKt_42_20.Models.Kafedra kafedra)
+          {
+              if (!ModelState.IsValid)
+              {
+                  return BadRequest(ModelState);
+              }
+
+              _context.Kafedra.Add(kafedra);
+              _context.SaveChanges();
+              return Ok(kafedra);
+          }*/
+        /*
+    [HttpPut("EditKafedra")]
+    public IActionResult UpdateKafedra(string kafedraname, [FromBody] Kafedra updatedKafedra)
+    {
+        var existingKafedra = _context.Kafedra.FirstOrDefault(g => g.KafedraName == kafedraname);
+
+        if (existingKafedra == null)
         {
-            var existingKafedra = _context.Kafedra.FirstOrDefault(g => g.KafedraName == kafedraname);
-
-            if (existingKafedra == null)
-            {
-                return NotFound();
-            }
-
-            existingKafedra.KafedraName = updatedKafedra.KafedraName;
-            _context.SaveChanges();
-
-            return Ok();
+            return NotFound();
         }
+
+        existingKafedra.KafedraName = updatedKafedra.KafedraName;
+        _context.SaveChanges();
+
+        return Ok();
+    }*/
         //удаление для кафедры
-        [HttpDelete("DeleteKafedra")]
-        public IActionResult DeleteKafedra(string kafedraName, libermanyankt_42_20.Models.Kafedra updatedKafedra)
-        {
-            var existingKafedra = _context.Kafedra.FirstOrDefault(g => g.KafedraName == kafedraName);
+        /* [HttpDelete("DeleteKafedra")]
+         public IActionResult DeleteKafedra(string kafedraName, OskinAndreiKt_42_20.Models.Kafedra updatedKafedra)
+         {
+             var existingKafedra = _context.Kafedra.FirstOrDefault(g => g.KafedraName == kafedraName);
 
-            if (existingKafedra == null)
+             if (existingKafedra == null)
+             {
+                 return NotFound();
+             }
+             _context.Kafedra.Remove(existingKafedra);
+             _context.SaveChanges();
+
+             return Ok();
+         }*/
+
+
+        // DELETE:
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletePrepod(int id)
+        {
+
+            var prepod = await _context.Prepod.FindAsync(id);
+
+            if (prepod == null)
             {
                 return NotFound();
             }
-            _context.Kafedra.Remove(existingKafedra);
+            _context.Prepod.Remove(prepod);
             _context.SaveChanges();
 
-            return Ok();
+            return Ok("removal was successful");
         }
     }
 }
