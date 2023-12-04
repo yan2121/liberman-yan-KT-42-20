@@ -5,6 +5,7 @@ using libermanyankt_42_20.Database;
 using Microsoft.EntityFrameworkCore;
 using libermanyankt_42_20.Models;
 using libermanyankt_42_20.Interfaces;
+using libermanyankt_42_20.Filters;
 
 namespace libermanyankt_42_20.Controllers
 {
@@ -23,6 +24,14 @@ namespace libermanyankt_42_20.Controllers
             _context = context;
         }
 
+        [HttpPost("GetPrepodsById", Name = "GetPrepodsById")]
+        public async Task<IActionResult> GetPrepodsByNameAsync(PrepodNameFilter filter, CancellationToken cancellationToken = default)
+        {
+            var prepod = await _prepodService.GetPrepodsByNameAsync(filter, cancellationToken);
+
+            return Ok(prepod);
+        }
+       
         [HttpPost(Name = "GetPrepodsByKafedra")]
         public async Task<IActionResult> GetPrepodsByKafedraAsync(PrepodKafedraFilter filter, CancellationToken cancellationToken = default)
         {
@@ -44,7 +53,7 @@ namespace libermanyankt_42_20.Controllers
             return Ok(prepod);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("EditPrepod", Name = "EditPrepod")]
         public async Task<IActionResult> UpdateTeacher(int id, Prepod prepod)
         {
             if (id != prepod.PrepodId)
@@ -70,7 +79,7 @@ namespace libermanyankt_42_20.Controllers
 
         /*  //добавление для кафедры
           [HttpPost("AddKafedra", Name = "AddKafedra")]
-          public IActionResult CreateKafedra([FromBody] OskinAndreiKt_42_20.Models.Kafedra kafedra)
+          public IActionResult CreateKafedra([FromBody] libermanyankt_42_20.Models.Kafedra kafedra)
           {
               if (!ModelState.IsValid)
               {
@@ -99,7 +108,7 @@ namespace libermanyankt_42_20.Controllers
     }*/
         //удаление для кафедры
         /* [HttpDelete("DeleteKafedra")]
-         public IActionResult DeleteKafedra(string kafedraName, OskinAndreiKt_42_20.Models.Kafedra updatedKafedra)
+         public IActionResult DeleteKafedra(string kafedraName, libermanyankt_42_20.Models.Kafedra updatedKafedra)
          {
              var existingKafedra = _context.Kafedra.FirstOrDefault(g => g.KafedraName == kafedraName);
 
@@ -115,7 +124,7 @@ namespace libermanyankt_42_20.Controllers
 
 
         // DELETE:
-        [HttpDelete("{id}")]
+        [HttpDelete("DeletePrepod", Name = "DeletePrepod")]
         public async Task<IActionResult> DeletePrepod(int id)
         {
 

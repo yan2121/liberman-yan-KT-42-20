@@ -1,6 +1,6 @@
-﻿
-using libermanyankt_42_20.Database;
-using libermanyankt_42_20.Filters.PrepodDegreeFilters;
+﻿using libermanyankt_42_20.Database;
+using libermanyankt_42_20.Filters;
+using libermanyankt_42_20.Filters.PrepodKafedraFilters;
 using libermanyankt_42_20.Interfaces;
 using libermanyankt_42_20.Models;
 using Microsoft.EntityFrameworkCore;
@@ -10,26 +10,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace libermanyankt_42_20.Test
+namespace liberman_yan.Test2
 {
-    public class PepodDegreeIntegrationTests
+    public class Test2
     {
         public readonly DbContextOptions<PrepodDbContext> _dbContextOptions;
 
-        public PepodDegreeIntegrationTests()
+        public Test2()
         {
             _dbContextOptions = new DbContextOptionsBuilder<PrepodDbContext>()
-            .UseInMemoryDatabase(databaseName: "prepod_db1")
+            .UseInMemoryDatabase(databaseName: "prepod_db3")
             .Options;
         }
 
         [Fact]
-        public async Task GetPrepodsByDegreeAsync_KT4220_TwoObjects()
+        public async Task GetPrepodsByKafedraAsync_KT4220_OneObjects()
         {
             // Arrange
-
             var ctx = new PrepodDbContext(_dbContextOptions);
-            var degreeService = new DegreeService(ctx);
             var prepodService = new PrepodService(ctx);
             var kafedra = new List<Kafedra>
             {
@@ -61,7 +59,6 @@ namespace libermanyankt_42_20.Test
                     Name_degree = "кандидат наук"
                 }
             };
-
             await ctx.Set<Degree>().AddRangeAsync(degree);
 
             await ctx.SaveChangesAsync();
@@ -102,14 +99,15 @@ namespace libermanyankt_42_20.Test
             await ctx.Set<Prepod>().AddRangeAsync(prepods);
 
             await ctx.SaveChangesAsync();
-            // Act
-            var filter = new PrepodDegreeFilter
-            {
-                Name_degree = "кандидат наук"
-            };
-            var prepodsResult = await degreeService.GetPrepodsByDegreeAsync(filter, CancellationToken.None);
 
-            Assert.Equal(1, prepodsResult.Length);
+            // Act
+            var filter = new PrepodNameFilter
+            {
+                KafedraId = 1
+            };
+            var prepodsResult = await prepodService.GetPrepodsByNameAsync(filter, CancellationToken.None);
+
+            Assert.Equal(2, prepodsResult.Length);
         }
     }
 }
